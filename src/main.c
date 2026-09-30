@@ -50,15 +50,7 @@ int main(void)
 
         if (strcmp(args[0], "cd") == 0)
         {
-            if (args[1] == NULL)
-            {
-                fprintf(stderr, "cd: missing argument\n");
-            }
-            else if (chdir(args[1]) == -1)
-            {
-                perror("cd");
-            }
-
+            run_cd(args[1]);
             continue;
         }
 

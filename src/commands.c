@@ -36,3 +36,17 @@ void run_pwd(void)
 
     printf("%s\n", cwd);
 }
+
+void run_cd(char *path)
+{
+    if (path == NULL)
+    {
+        fprintf(stderr, "cd: missing argument\n");
+        return;
+    }
+
+    if (chdir(path) == -1)
+    {
+        perror("cd");
+    }
+}
