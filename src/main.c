@@ -64,19 +64,9 @@ int main(void)
 
         if (strcmp(args[0], "pwd") == 0)
         {
-            char cwd[1024];
-
-            if (getcwd(cwd, sizeof(cwd)) == NULL)
-            {
-                perror("pwd");
-            }
-            else
-            {
-                printf("%s\n", cwd);
-            }
-
+            run_pwd();
             continue;
-        }
+        }   
 
         if (strcmp(args[0], "exit") == 0)
         {

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <dirent.h>
+#include <unistd.h>
 #include "commands.h"
 
 void run_ls(void)
@@ -21,4 +22,17 @@ void run_ls(void)
     }
 
     closedir(dir);
+}
+
+void run_pwd(void)
+{
+    char cwd[1024];
+
+    if (getcwd(cwd, sizeof(cwd)) == NULL)
+    {
+        perror("pwd");
+        return;
+    }
+
+    printf("%s\n", cwd);
 }
