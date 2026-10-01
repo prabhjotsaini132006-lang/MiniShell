@@ -65,6 +65,11 @@ int main(void)
             break;
         }
 
+        if (strcmp(args[0], "cat") == 0)
+        {
+            run_cat(args[1]);
+            continue;
+        }
         printf("minishell: command not implemented: %s\n", args[0]);
     }
 

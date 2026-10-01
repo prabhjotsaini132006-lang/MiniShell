@@ -2,6 +2,7 @@
 #include <dirent.h>
 #include <unistd.h>
 #include "commands.h"
+#include <fcntl.h>
 
 void run_ls(void)
 {
@@ -49,4 +50,36 @@ void run_cd(char *path)
     {
         perror("cd");
     }
+}
+
+void run_cat(char *filename)
+{
+    if (filename == NULL)
+    {
+        fprintf(stderr, "cat: missing file operand\n");
+        return;
+    }
+
+    int fd = open(filename, O_RDONLY);
+
+    if (fd == -1)
+    {
+        perror("cat");
+        return;
+    }
+
+    char buffer[1024];
+    ssize_t bytes_read;
+
+    while ((bytes_read = read(fd, buffer, sizeof(buffer))) > 0)
+    {
+        write(STDOUT_FILENO, buffer, bytes_read);
+    }
+
+    if (bytes_read == -1)
+    {
+        perror("cat");
+    }
+
+    close(fd);
 }
