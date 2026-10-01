@@ -70,7 +70,21 @@ int main(void)
             run_cat(args[1]);
             continue;
         }
+
+        if (strcmp(args[0], "touch") == 0)
+        {
+            run_touch(args[1]);
+            continue;
+        }
+
+        if (strcmp(args[0], "mkdir") == 0)
+        {
+            run_mkdir(args[1]);
+            continue;
+        }
+
         printf("minishell: command not implemented: %s\n", args[0]);
+
     }
 
     free(input);

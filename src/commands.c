@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include "commands.h"
 #include <fcntl.h>
+#include <sys/stat.h>
 
 void run_ls(void)
 {
@@ -82,4 +83,38 @@ void run_cat(char *filename)
     }
 
     close(fd);
+}
+
+void run_touch(char *filename)
+{
+    if (filename == NULL)
+    {
+        fprintf(stderr, "touch: missing file operand\n");
+        return;
+    }
+
+    int fd = open(filename, O_WRONLY | O_CREAT, 0644);
+
+    if (fd == -1)
+    {
+        perror("touch");
+        return;
+    }
+
+    close(fd);
+}
+
+void run_mkdir(char *dirname)
+{
+    if (dirname == NULL)
+    {
+        fprintf(stderr, "mkdir: missing operand\n");
+        return;
+    }
+
+    if (mkdir(dirname, 0755) == -1)
+    {
+        perror("mkdir");
+        return;
+    }
 }
