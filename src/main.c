@@ -62,7 +62,10 @@ int main(void)
 
         if (strcmp(args[0], "exit") == 0)
         {
-            break;
+            if (run_exit())
+            {
+                break;
+            }
         }
 
         if (strcmp(args[0], "cat") == 0)
@@ -80,6 +83,24 @@ int main(void)
         if (strcmp(args[0], "mkdir") == 0)
         {
             run_mkdir(args[1]);
+            continue;
+        }
+
+        if (strcmp(args[0], "rm") == 0)
+        {
+            run_rm(args[1]);
+            continue;
+        }
+
+        if (strcmp(args[0], "echo") == 0)
+        {
+            run_echo(args, argc);
+            continue;
+        }
+
+        if (strcmp(args[0], "clear") == 0)
+        {
+            run_clear();
             continue;
         }
 

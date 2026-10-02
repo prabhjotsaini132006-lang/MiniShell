@@ -118,3 +118,44 @@ void run_mkdir(char *dirname)
         return;
     }
 }
+
+void run_rm(char *filename)
+{
+    if (filename == NULL)
+    {
+        fprintf(stderr, "rm: missing operand\n");
+        return;
+    }
+
+    if (unlink(filename) == -1)
+    {
+        perror("rm");
+        return;
+    }
+}
+
+void run_echo(char *args[], int argc)
+{
+    for (int i = 1; i < argc; i++)
+    {
+        printf("%s", args[i]);
+
+        if (i < argc - 1)
+        {
+            printf(" ");
+        }
+    }
+
+    printf("\n");
+}
+
+void run_clear(void)
+{
+    printf("\033[H\033[2J");
+    fflush(stdout);
+}
+
+int run_exit(void)
+{
+    return 1;
+}

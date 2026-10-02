@@ -7,5 +7,9 @@ void run_cd(char *path);
 void run_cat(char *filename);
 void run_touch(char *filename);
 void run_mkdir(char *dirname);
+void run_rm(char *filename);
+void run_echo(char *args[], int argc);
+void run_clear(void);
+int run_exit(void);
 
 #endif
