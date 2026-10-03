@@ -104,6 +104,36 @@ int main(void)
             continue;
         }
 
+        if (strcmp(args[0], "head") == 0)
+        {
+            run_head(args[1]);
+            continue;
+        }
+
+        if (strcmp(args[0], "tail") == 0)
+        {
+            run_tail(args[1]);
+            continue;
+        }
+
+        if (strcmp(args[0], "wc") == 0)
+        {
+            run_wc(args[1]);
+            continue;
+        }
+
+        if (strcmp(args[0], "cp") == 0)
+        {
+            run_cp(args[1], args[2]);
+            continue;
+        }
+
+        if (strcmp(args[0], "mv") == 0)
+        {
+            run_mv(args[1], args[2]);
+            continue;
+        }
+
         printf("minishell: command not implemented: %s\n", args[0]);
 
     }

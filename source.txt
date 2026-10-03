@@ -1,0 +1,2 @@
+Hello from MiniShell
+This is a copy test.
