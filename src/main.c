@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "commands.h"
+#include "parser.h"
 
 int main(void)
 {
@@ -28,19 +29,7 @@ int main(void)
         }
 
         char *args[100];
-        int argc = 0;
-
-        char *token = strtok(input, " ");
-
-        while (token != NULL && argc < 99)
-        {
-            args[argc] = token;
-            argc++;
-
-            token = strtok(NULL, " ");
-        }
-
-        args[argc] = NULL;
+        int argc = parse_input(input, args);
 
         if (strcmp(args[0], "ls") == 0)
         {
