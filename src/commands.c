@@ -57,9 +57,25 @@ void run_cd(char *path)
 
 void run_cat(char *filename)
 {
+    char buffer[1024];
+    ssize_t bytes_read;
+
     if (filename == NULL)
     {
-        fprintf(stderr, "cat: missing file operand\n");
+        while ((bytes_read = read(STDIN_FILENO, buffer, sizeof(buffer))) > 0)
+        {
+            if (write(STDOUT_FILENO, buffer, bytes_read) == -1)
+            {
+                perror("cat");
+                return;
+            }
+        }
+
+        if (bytes_read == -1)
+        {
+            perror("cat");
+        }
+
         return;
     }
 
@@ -71,12 +87,14 @@ void run_cat(char *filename)
         return;
     }
 
-    char buffer[1024];
-    ssize_t bytes_read;
-
     while ((bytes_read = read(fd, buffer, sizeof(buffer))) > 0)
     {
-        write(STDOUT_FILENO, buffer, bytes_read);
+        if (write(STDOUT_FILENO, buffer, bytes_read) == -1)
+        {
+            perror("cat");
+            close(fd);
+            return;
+        }
     }
 
     if (bytes_read == -1)
