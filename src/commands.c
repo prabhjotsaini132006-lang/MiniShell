@@ -182,9 +182,39 @@ int run_exit(void)
 
 void run_head(char *filename)
 {
+    char buffer[1024];
+    ssize_t bytes_read;
+    int lines = 0;
+
     if (filename == NULL)
     {
-        fprintf(stderr, "head: missing file operand\n");
+        while ((bytes_read = read(STDIN_FILENO, buffer, sizeof(buffer))) > 0)
+        {
+            for (ssize_t i = 0; i < bytes_read; i++)
+            {
+                if (write(STDOUT_FILENO, &buffer[i], 1) == -1)
+                {
+                    perror("head");
+                    return;
+                }
+
+                if (buffer[i] == '\n')
+                {
+                    lines++;
+
+                    if (lines == 10)
+                    {
+                        return;
+                    }
+                }
+            }
+        }
+
+        if (bytes_read == -1)
+        {
+            perror("head");
+        }
+
         return;
     }
 
@@ -196,21 +226,22 @@ void run_head(char *filename)
         return;
     }
 
-    char buffer[1024];
-    ssize_t bytes_read;
-    int line_count = 0;
-
     while ((bytes_read = read(fd, buffer, sizeof(buffer))) > 0)
     {
-        for (int i = 0; i < bytes_read; i++)
+        for (ssize_t i = 0; i < bytes_read; i++)
         {
-            printf("%c", buffer[i]);
+            if (write(STDOUT_FILENO, &buffer[i], 1) == -1)
+            {
+                perror("head");
+                close(fd);
+                return;
+            }
 
             if (buffer[i] == '\n')
             {
-                line_count++;
+                lines++;
 
-                if (line_count == 10)
+                if (lines == 10)
                 {
                     close(fd);
                     return;
@@ -226,7 +257,6 @@ void run_head(char *filename)
 
     close(fd);
 }
-
 void run_tail(char *filename)
 {
     if (filename == NULL)
@@ -313,20 +343,6 @@ void run_tail(char *filename)
 
 void run_wc(char *filename)
 {
-    if (filename == NULL)
-    {
-        fprintf(stderr, "wc: missing file operand\n");
-        return;
-    }
-
-    int fd = open(filename, O_RDONLY);
-
-    if (fd == -1)
-    {
-        perror("wc");
-        return;
-    }
-
     char buffer[1024];
     ssize_t bytes_read;
 
@@ -335,6 +351,22 @@ void run_wc(char *filename)
     long bytes = 0;
 
     int in_word = 0;
+    int fd;
+
+    if (filename == NULL)
+    {
+        fd = STDIN_FILENO;
+    }
+    else
+    {
+        fd = open(filename, O_RDONLY);
+
+        if (fd == -1)
+        {
+            perror("wc");
+            return;
+        }
+    }
 
     while ((bytes_read = read(fd, buffer, sizeof(buffer))) > 0)
     {
@@ -353,7 +385,7 @@ void run_wc(char *filename)
             {
                 in_word = 0;
             }
-            else if (in_word == 0)
+            else if (!in_word)
             {
                 words++;
                 in_word = 1;
@@ -364,13 +396,19 @@ void run_wc(char *filename)
     if (bytes_read == -1)
     {
         perror("wc");
-        close(fd);
-        return;
     }
 
-    close(fd);
-
-    printf("%ld %ld %ld %s\n", lines, words, bytes, filename);
+    if (filename != NULL)
+    {
+        close(fd);
+        printf("%ld %ld %ld %s\n",
+               lines, words, bytes, filename);
+    }
+    else
+    {
+        printf("%ld %ld %ld\n",
+               lines, words, bytes);
+    }
 }
 
 void run_cp(char *source, char *destination)

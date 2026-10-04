@@ -6,9 +6,14 @@
 #include "commands.h"
 #include "parser.h"
 #include "redirection.h"
+#include "pipeline.h"
+#include "background.h"
+#include "signals.h"
 
 int main(void)
 {
+    setup_signal_handlers();
+
     char *input = NULL;
     size_t size = 0;
 
@@ -32,6 +37,18 @@ int main(void)
 
         char *args[100];
         int argc = parse_input(input, args);
+        int background_result = run_background(args, argc);
+
+        if (background_result != 0)
+        {
+            continue;
+        }
+        int pipeline_result = run_pipeline(args, argc);
+
+        if (pipeline_result != 0)
+        {
+            continue;
+        }
 
         int original_stdin = dup(STDIN_FILENO);
         int original_stdout = dup(STDOUT_FILENO);
