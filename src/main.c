@@ -9,6 +9,7 @@
 #include "pipeline.h"
 #include "background.h"
 #include "signals.h"
+#include "history.h"
 
 int main(void)
 {
@@ -34,6 +35,8 @@ int main(void)
         {
             continue;
         }
+
+        add_history_command(input);
 
         char *args[100];
         int argc = parse_input(input, args);
@@ -149,6 +152,10 @@ int main(void)
         else if (strcmp(args[0], "mv") == 0)
         {
             run_mv(args[1], args[2]);
+        }
+        else if (strcmp(args[0], "history") == 0)
+        {
+            show_history();
         }
         else
         {
