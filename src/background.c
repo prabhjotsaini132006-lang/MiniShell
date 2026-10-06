@@ -4,7 +4,12 @@
 #include <sys/wait.h>
 
 #include "background.h"
-#include "commands.h"
+#include "cat.h"
+#include "echo.h"
+#include "head.h"
+#include "tail.h"
+#include "wc.h"
+#include "pwd.h"
 
 static void execute_background_command(char *args[], int argc)
 {

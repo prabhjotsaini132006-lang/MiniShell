@@ -6,6 +6,11 @@
 # Executables
 minishell
 
+# Temporary test executables
+exec_test
+fork_test
+token_test
+
 # VS Code
 .vscode/
 

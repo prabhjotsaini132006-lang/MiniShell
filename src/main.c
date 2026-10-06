@@ -3,13 +3,28 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "commands.h"
 #include "parser.h"
 #include "redirection.h"
 #include "pipeline.h"
 #include "background.h"
 #include "signals.h"
 #include "history.h"
+#include "ls.h"
+#include "cd.h"
+#include "pwd.h"
+#include "cat.h"
+#include "touch.h"
+#include "foreground.h"
+#include "mkdir.h"
+#include "rm.h"
+#include "echo.h"
+#include "clear.h"
+#include "head.h"
+#include "tail.h"
+#include "wc.h"
+#include "cp.h"
+#include "mv.h"
+#include "exit.h"
 
 int main(void)
 {
@@ -53,6 +68,13 @@ int main(void)
             continue;
         }
 
+        int foreground_result = run_foreground(args, argc);
+
+        if (foreground_result != 0)
+        {
+            continue;
+        }
+
         int original_stdin = dup(STDIN_FILENO);
         int original_stdout = dup(STDOUT_FILENO);
 
@@ -86,11 +108,11 @@ int main(void)
 
         if (strcmp(args[0], "ls") == 0)
         {
-            run_ls();
+            run_ls(argc > 1 ? args[1] : NULL);
         }
         else if (strcmp(args[0], "cd") == 0)
         {
-            run_cd(args[1]);
+            run_cd(argc > 1 ? args[1] : NULL);
         }
         else if (strcmp(args[0], "pwd") == 0)
         {
@@ -111,19 +133,19 @@ int main(void)
         }
         else if (strcmp(args[0], "cat") == 0)
         {
-            run_cat(args[1]);
+            run_cat(argc > 1 ? args[1] : NULL);
         }
         else if (strcmp(args[0], "touch") == 0)
         {
-            run_touch(args[1]);
+            run_touch(argc > 1 ? args[1] : NULL);
         }
         else if (strcmp(args[0], "mkdir") == 0)
         {
-            run_mkdir(args[1]);
+            run_mkdir(argc > 1 ? args[1] : NULL);
         }
         else if (strcmp(args[0], "rm") == 0)
         {
-            run_rm(args[1]);
+            run_rm(argc > 1 ? args[1] : NULL);
         }
         else if (strcmp(args[0], "echo") == 0)
         {
@@ -133,25 +155,31 @@ int main(void)
         {
             run_clear();
         }
-        else if (strcmp(args[0], "head") == 0)
+       else if (strcmp(args[0], "head") == 0)
         {
-            run_head(args[1]);
+            run_head(argc > 1 ? args[1] : NULL);
         }
         else if (strcmp(args[0], "tail") == 0)
         {
-            run_tail(args[1]);
+            run_tail(argc > 1 ? args[1] : NULL);
         }
         else if (strcmp(args[0], "wc") == 0)
         {
-            run_wc(args[1]);
+            run_wc(argc > 1 ? args[1] : NULL);
         }
         else if (strcmp(args[0], "cp") == 0)
         {
-            run_cp(args[1], args[2]);
+            run_cp(
+                argc > 1 ? args[1] : NULL,
+                argc > 2 ? args[2] : NULL
+            );
         }
-        else if (strcmp(args[0], "mv") == 0)
+       else if (strcmp(args[0], "mv") == 0)
         {
-            run_mv(args[1], args[2]);
+            run_mv(
+                argc > 1 ? args[1] : NULL,
+                argc > 2 ? args[2] : NULL
+            );
         }
         else if (strcmp(args[0], "history") == 0)
         {

@@ -5,8 +5,12 @@
 #include <sys/wait.h>
 
 #include "pipeline.h"
-#include "commands.h"
 #include "redirection.h"
+#include "cat.h"
+#include "echo.h"
+#include "head.h"
+#include "tail.h"
+#include "wc.h"
 
 #define MAX_COMMANDS 50
 
@@ -49,6 +53,11 @@ static void execute_pipeline_command(char *command[])
     else if (strcmp(command[0], "wc") == 0)
     {
         run_wc(argc > 1 ? command[1] : NULL);
+    }
+
+    else if (strcmp(command[0], "tail") == 0)
+    {
+        run_tail(argc > 1 ? command[1] : NULL);
     }
     else
     {
